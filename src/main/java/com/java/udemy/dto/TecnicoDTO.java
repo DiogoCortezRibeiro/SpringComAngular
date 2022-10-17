@@ -5,6 +5,7 @@ import com.java.udemy.domain.Tecnico;
 import com.java.udemy.domain.enums.Perfil;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -15,9 +16,13 @@ import java.util.stream.Collectors;
 public class TecnicoDTO implements Serializable {
 
     private Integer id;
+    @NotNull(message = "O campo NOME é requerido")
     private String nome;
+    @NotNull(message = "O campo SENHA é requerido")
     private String senha;
+    @NotNull(message = "O campo CPF é requerido")
     private String cpf;
+    @NotNull(message = "O campo E-mail é requerido")
     private String email;
     protected Set<Integer> perfis = new HashSet<>();
     @JsonFormat(pattern = "dd/MM/yyyy")
