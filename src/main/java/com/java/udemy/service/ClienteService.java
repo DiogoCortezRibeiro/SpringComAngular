@@ -10,6 +10,7 @@ import com.java.udemy.exceptions.ObjectNotFoundException;
 import com.java.udemy.repository.ClienteRepository;
 import com.java.udemy.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +25,9 @@ public class ClienteService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     public List<Cliente> findAll() {
         return clienteRepository.findAll();
     }
@@ -35,6 +39,7 @@ public class ClienteService {
 
     public Cliente create(ClienteDTO dto) {
         dto.setId(null);
+        dto.setSenha(encoder.encode(dto.getSenha()));
         validaPorCpfEEmail(dto);
         Cliente clienteNovo = new Cliente(dto);
 
@@ -57,6 +62,7 @@ public class ClienteService {
 
     public Cliente update(Integer id, ClienteDTO dto) {
         dto.setId(id);
+        dto.setSenha(encoder.encode(dto.getSenha()));
         Cliente clienteAntigo = getById(id);
         validaPorCpfEEmail(dto);
         clienteAntigo = new Cliente(dto);

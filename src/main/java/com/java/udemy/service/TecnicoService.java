@@ -9,6 +9,7 @@ import com.java.udemy.repository.PessoaRepository;
 import com.java.udemy.repository.TecnicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public class TecnicoService {
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     public List<Tecnico> findAll() {
         return tecnicoRepository.findAll();
     }
@@ -34,6 +38,7 @@ public class TecnicoService {
 
     public Tecnico create(TecnicoDTO dto) {
         dto.setId(null);
+        dto.setSenha(encoder.encode(dto.getSenha()));
         validaPorCpfEEmail(dto);
         Tecnico tecnicoNovo = new Tecnico(dto);
 
@@ -56,6 +61,7 @@ public class TecnicoService {
 
     public Tecnico update(Integer id, TecnicoDTO dto) {
         dto.setId(id);
+        dto.setSenha(encoder.encode(dto.getSenha()));
         Tecnico tecnicoAntigo = getById(id);
         validaPorCpfEEmail(dto);
         tecnicoAntigo = new Tecnico(dto);

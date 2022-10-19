@@ -10,6 +10,7 @@ import com.java.udemy.repository.ChamadoRepository;
 import com.java.udemy.repository.ClienteRepository;
 import com.java.udemy.repository.TecnicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,11 +25,14 @@ public class DBService {
     @Autowired
     private ChamadoRepository chamadoRepository;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
     public void instanciaDB() {
-        Tecnico tecnico = new Tecnico(null, "Diogo Cortez", "123456789", "diogo.example@gmail.com", "123");
+        Tecnico tecnico = new Tecnico(null, "Diogo Cortez", "123456789", "diogo.example@gmail.com", encoder.encode("123"));
         tecnico.addPerfils(Perfil.ADMIN);
 
-        Cliente cliente = new Cliente(null, "Cliente teste", "12345678910", "cliente.example@gmail.com", "123");
+        Cliente cliente = new Cliente(null, "Cliente teste", "12345678910", "cliente.example@gmail.com", encoder.encode("123"));
 
         Chamado chamado = new Chamado(null, Prioridade.MEDIA, Status.ANDAMENTO, "Chamado 01", "Primeiro chamado", tecnico, cliente);
 
