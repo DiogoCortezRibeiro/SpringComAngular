@@ -1,46 +1,47 @@
 package com.java.udemy.service;
 
+import com.java.udemy.domain.Cliente;
 import com.java.udemy.domain.Pessoa;
 import com.java.udemy.domain.Tecnico;
+import com.java.udemy.dto.ClienteDTO;
 import com.java.udemy.dto.TecnicoDTO;
 import com.java.udemy.exceptions.DataIlegalException;
 import com.java.udemy.exceptions.ObjectNotFoundException;
+import com.java.udemy.repository.ClienteRepository;
 import com.java.udemy.repository.PessoaRepository;
-import com.java.udemy.repository.TecnicoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class TecnicoService {
+public class ClienteService {
 
     @Autowired
-    private TecnicoRepository tecnicoRepository;
+    private ClienteRepository clienteRepository;
 
     @Autowired
     private PessoaRepository pessoaRepository;
 
-    public List<Tecnico> findAll() {
-        return tecnicoRepository.findAll();
+    public List<Cliente> findAll() {
+        return clienteRepository.findAll();
     }
 
-    public Tecnico getById(Integer id) {
-        Optional<Tecnico> tecnico = tecnicoRepository.findById(id);
-        return tecnico.orElseThrow(() -> new ObjectNotFoundException("Tecnico não encontrado"));
+    public Cliente getById(Integer id) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+        return cliente.orElseThrow(() -> new ObjectNotFoundException("Cliente não encontrado"));
     }
 
-    public Tecnico create(TecnicoDTO dto) {
+    public Cliente create(ClienteDTO dto) {
         dto.setId(null);
         validaPorCpfEEmail(dto);
-        Tecnico tecnicoNovo = new Tecnico(dto);
+        Cliente clienteNovo = new Cliente(dto);
 
-        return tecnicoRepository.save(tecnicoNovo);
+        return clienteRepository.save(clienteNovo);
     }
 
-    private void validaPorCpfEEmail(TecnicoDTO dto) {
+    private void validaPorCpfEEmail(ClienteDTO dto) {
         Optional<Pessoa> pessoa = pessoaRepository.findByCpf(dto.getCpf());
         verificaPessoa(pessoa, dto.getId(), "CPF já cadastrado no sistema");
 
@@ -54,22 +55,22 @@ public class TecnicoService {
         }
     }
 
-    public Tecnico update(Integer id, TecnicoDTO dto) {
+    public Cliente update(Integer id, ClienteDTO dto) {
         dto.setId(id);
-        Tecnico tecnicoAntigo = getById(id);
+        Cliente clienteAntigo = getById(id);
         validaPorCpfEEmail(dto);
-        tecnicoAntigo = new Tecnico(dto);
+        clienteAntigo = new Cliente(dto);
 
-        return tecnicoRepository.save(tecnicoAntigo);
+        return clienteRepository.save(clienteAntigo);
     }
 
     public void delete(Integer id) {
-        Tecnico tecnico = getById(id);
+        Cliente cliente = getById(id);
 
-        if(tecnico.getChamados().size() > 0) {
-            throw new DataIlegalException("Ordens de serviço vinculadas a este tecnico!");
+        if(cliente.getChamados().size() > 0) {
+            throw new DataIlegalException("Ordens de serviço vinculadas a este cliente!");
         }
 
-        tecnicoRepository.delete(tecnico);
+        clienteRepository.delete(cliente);
     }
 }

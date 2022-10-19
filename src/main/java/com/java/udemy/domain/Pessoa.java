@@ -3,6 +3,7 @@ package com.java.udemy.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.java.udemy.domain.enums.Perfil;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
 import java.io.Serializable;
